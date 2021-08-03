@@ -12,6 +12,10 @@ namespace TwiceAroundTheTreeApi.Controllers
             return "Hello";
         }
 
+        [HttpPost]
+        public string GetFromGraph(GraphRepresentation edges) {
+            return edges.ToString();
+        }
         
 
     }

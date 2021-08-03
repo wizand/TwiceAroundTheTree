@@ -1,9 +1,13 @@
 namespace Matrix {
 
+    public class Node {
+        public Node(string name) {
+            Name = name;
+        }
+        public string Name {get; set;}
 
-
-public class Node {
-
-
-}
+        public override string ToString() {
+            return Name;
+        }
+    }
 }
