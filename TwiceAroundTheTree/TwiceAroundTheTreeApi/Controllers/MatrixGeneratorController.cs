@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TwiceAroundTheTreeApi.ControllerModels;
 
 namespace TwiceAroundTheTreeApi.Controllers
 {
@@ -13,7 +14,7 @@ namespace TwiceAroundTheTreeApi.Controllers
         }
 
         [HttpPost]
-        public string GetFromGraph(GraphRepresentation edges) {
+        public string GetFromGraph(GraphFromEdges edges) {
             return edges.ToString();
         }
         
