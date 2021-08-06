@@ -1,17 +1,81 @@
+using System;
 using System.Collections.Generic;
+using System.Text;
 using Matrix;
 namespace TwiceAroundTheTreeApi.ControllerModels
 {
     public class GraphFromEdges
     {
-
         public string VerticeNames { get; set; }
-        public string EdgesString { get; set; }
+        public List<string> EdgesStrings { get; set; }
+        public string ErrorMessage { get; set; } = "All good.";
+        private List<Edge> parsedEdges;
+        private const string TOKEN_DELIMITER = "-";
+
+        public bool ParseEdgesFromEdgeStrings() {
+            if (EdgesStrings == null || EdgesStrings.Count == 0) {
+                ErrorMessage = "No edge strings to parse!";
+                return false;
+            }
+
+            parsedEdges= new List<Edge>();
+
+            try
+            {
+
+                foreach (string edgeString in EdgesStrings) 
+                {
+                    string[] tokens = edgeString.Trim().Split(TOKEN_DELIMITER);
+                    Node begin, end;
+                    bool hasWeight = false;
+                    int weight = 0;
+
+                    //No weights
+                    if (tokens.Length == 2)
+                    {
+                        begin = new Node(tokens[0]);
+                        end = new Node(tokens[1]);
+                    //Weight included
+                    } else if (tokens.Length == 3) {
+                        hasWeight = true;
+                        begin = new Node(tokens[0]);
+                        end = new Node(tokens[2]);
+                        weight = int.Parse(tokens[1]);
+                    //Wrong number of parsed tokens.
+                    } else {
+                        ErrorMessage = "Wrong number of tokens in edgeString " + edgeString + ". tokens found " + tokens.Length + " when there should be either 2" +
+                            " for non weighted edge or 3 for weighted. Make sure the edge strings are in form or 'Verticename"+TOKEN_DELIMITER+ "optionalWeight" + TOKEN_DELIMITER + "Verticename'.";
+                        return false;
+                    }
+
+                    Edge e;
+                    if (hasWeight)
+                        e = new(begin, end, weight);
+                    else
+                        e = new(begin, end);
+                
+                    parsedEdges.Add(e);
+                }
+            } 
+            catch( Exception e )
+            {
+                ErrorMessage += "Exception while parsing edges: " + e.Message;
+                return false;
+            }
+            return true;
+        }
 
         public override string ToString()
         {
+            StringBuilder sb = new StringBuilder("VerticeNames = " + VerticeNames );
+            sb.AppendLine(EdgesStrings.ToString());
+            foreach (Edge e in parsedEdges) 
+            {
+                sb.AppendLine(e.ToString());
+            }
+            sb.AppendLine("ErrorMessage: " + ErrorMessage);
 
-            return "VerticeNames=" + VerticeNames + " EdgeString=" + EdgesString;
+            return sb.ToString();
         }
 
     }
