@@ -1,28 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Matrix;
+using Graph;
 namespace TwiceAroundTheTreeApi.ControllerModels
 {
     public class GraphFromEdges
     {
-        public string VerticeNames { get; set; }
         public List<string> EdgesStrings { get; set; }
-        public string ErrorMessage { get; set; } = "All good.";
+        private List<Node> parsedNodes { get; set; }
+        private string errorMessage { get; set; } = "All good.";
         private List<Edge> parsedEdges;
         private const string TOKEN_DELIMITER = "-";
 
         public bool ParseEdgesFromEdgeStrings() {
             if (EdgesStrings == null || EdgesStrings.Count == 0) {
-                ErrorMessage = "No edge strings to parse!";
+                errorMessage = "No edge strings to parse!";
                 return false;
             }
 
             parsedEdges= new List<Edge>();
+            parsedNodes = new List<Node>();
 
             try
             {
-
                 foreach (string edgeString in EdgesStrings) 
                 {
                     string[] tokens = edgeString.Trim().Split(TOKEN_DELIMITER);
@@ -40,10 +40,13 @@ namespace TwiceAroundTheTreeApi.ControllerModels
                         hasWeight = true;
                         begin = new Node(tokens[0]);
                         end = new Node(tokens[2]);
+
+                        addToNodesList(begin, end);
+
                         weight = int.Parse(tokens[1]);
                     //Wrong number of parsed tokens.
                     } else {
-                        ErrorMessage = "Wrong number of tokens in edgeString " + edgeString + ". tokens found " + tokens.Length + " when there should be either 2" +
+                        errorMessage = "Wrong number of tokens in edgeString " + edgeString + ". tokens found " + tokens.Length + " when there should be either 2" +
                             " for non weighted edge or 3 for weighted. Make sure the edge strings are in form or 'Verticename"+TOKEN_DELIMITER+ "optionalWeight" + TOKEN_DELIMITER + "Verticename'.";
                         return false;
                     }
@@ -59,21 +62,49 @@ namespace TwiceAroundTheTreeApi.ControllerModels
             } 
             catch( Exception e )
             {
-                ErrorMessage += "Exception while parsing edges: " + e.Message;
+                errorMessage = "Exception while parsing edges: " + e.Message;
                 return false;
             }
             return true;
         }
 
+        private void addToNodesList(params Node[] nodesToAdd )
+        {
+            foreach (Node nodeToAdd in nodesToAdd) {
+                if (parsedNodes.Contains(nodeToAdd)) {
+                    continue;
+                }
+                parsedNodes.Add(nodeToAdd);
+            }
+        }
+
+        public string GetErrorMessage() {
+            return errorMessage;
+        }
+        public List<Edge> GetEdges() {
+            return parsedEdges;
+        }
+
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder("VerticeNames = " + VerticeNames );
-            sb.AppendLine(EdgesStrings.ToString());
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Source edge strings: ");
+            foreach (string es in EdgesStrings)
+            {
+                sb.AppendLine(es.ToString());
+            }
+            sb.AppendLine("Vertices: ");
+            foreach (Node n in parsedNodes)
+            {
+                sb.AppendLine(n.ToString());
+            }
+
+            sb.AppendLine("Created edges: ");
             foreach (Edge e in parsedEdges) 
             {
                 sb.AppendLine(e.ToString());
             }
-            sb.AppendLine("ErrorMessage: " + ErrorMessage);
+            sb.AppendLine("Info message: " + errorMessage);
 
             return sb.ToString();
         }

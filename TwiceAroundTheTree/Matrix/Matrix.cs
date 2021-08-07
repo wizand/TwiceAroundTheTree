@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Matrix;
+using Graph;
 
 
-namespace Matrix
+namespace Graph
 {
     public class Matrix
     {

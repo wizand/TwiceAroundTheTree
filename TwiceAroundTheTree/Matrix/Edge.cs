@@ -1,4 +1,4 @@
-namespace Matrix {
+namespace Graph {
 
     public class Edge {
         private const int NOT_WEIGHTED = -9999;
@@ -51,7 +51,6 @@ namespace Matrix {
                     return false;
                 }
             }
-            return base.Equals (obj);
         }
         
 

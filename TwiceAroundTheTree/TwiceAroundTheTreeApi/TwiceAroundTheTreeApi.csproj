@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Matrix\Matrix.csproj" />
+    <ProjectReference Include="..\Matrix\Graph.csproj" />
   </ItemGroup>
 
 </Project>

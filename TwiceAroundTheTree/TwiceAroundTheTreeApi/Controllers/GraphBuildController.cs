@@ -12,7 +12,7 @@ namespace TwiceAroundTheTreeApi.Controllers
     public class GraphBuildController : ControllerBase
     {
         [HttpGet]
-        [Microsoft.AspNetCore.Mvc.Route("HowToUse")]
+        [Route("HowToUse")]
         public string Get()
         {
             return new HowToUse().HowToUseDescription;
@@ -20,15 +20,21 @@ namespace TwiceAroundTheTreeApi.Controllers
 
         // GET: api/<GraphBuildController>
         [HttpGet]
+        [Route("FromEdges")]
         public string Get([FromQuery] GraphFromEdges graphParameters)
         {
+            bool ok = graphParameters.ParseEdgesFromEdgeStrings();
+            if ( !ok )
+            {
+                return graphParameters.GetErrorMessage() + "\n Please refer to <a href=\"https://localhost:44324/api/GraphBuild/HowToUse\">https://localhost:44324/api/GraphBuild/HowToUse</a>";
+            }
 
-           return "https://localhost:44324/api/GraphBuild/HowToUse";
-            //return graphParameters.ToString();
+            return graphParameters.ToString();
         }
 
         // POST api/<GraphBuildController>
         [HttpPost]
+        [Route("FromMatrix")]
         public string Post([FromBody] GraphFromAdjacencyMatrix garphParameters)
         {
             return garphParameters.ToString();
