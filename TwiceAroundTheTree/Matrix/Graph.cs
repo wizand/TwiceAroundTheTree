@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Graph
 {
-    class Graph
+    public class Graph
     {
         public List<Edge> Edges { get; set; }
         public List<Node> Vertices { get; set; }

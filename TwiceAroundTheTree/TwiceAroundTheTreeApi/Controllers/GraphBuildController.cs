@@ -19,9 +19,9 @@ namespace TwiceAroundTheTreeApi.Controllers
         }
 
         // GET: api/<GraphBuildController>
-        [HttpGet]
+        [HttpPut]
         [Route("FromEdges")]
-        public string Get([FromQuery] GraphFromEdges graphParameters)
+        public string Put([FromQuery] GraphFromEdges graphParameters)
         {
             bool ok = graphParameters.ParseEdgesFromEdgeStrings();
             if ( !ok )
@@ -33,17 +33,18 @@ namespace TwiceAroundTheTreeApi.Controllers
         }
 
         // POST api/<GraphBuildController>
-        [HttpPost]
+        [HttpPut]
         [Route("FromMatrix")]
-        public string Post([FromBody] GraphFromAdjacencyMatrix garphParameters)
+        public string Put([FromBody] GraphFromAdjacencyMatrix garphParameters)
         {
             return garphParameters.ToString();
         }
 
         // PUT api/<GraphBuildController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpGet("{id}")]
+        public Graph.Graph Get(Guid graphId)
         {
+            return new Graph.Graph();
         }
 
         // DELETE api/<GraphBuildController>/5
