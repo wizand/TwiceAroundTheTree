@@ -1,4 +1,5 @@
 ﻿using Graph;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,57 +12,101 @@ namespace TwiceAroundTheTreeApi.ControllerModels
         public List<string> RowsAsStrings { get; set; }
         private int[][] rowsAsIntArrays { get; set; }
 
-        private string errorMessage { get; set; } = "All good.";
+        private string errorMessage { get; set; } = "No parsing done yet.";
         private List<Node> parsedNodes = new List<Node>();
         private Matrix parsedAdjacencyMatrix;
+        private bool parseOk = false;
         public bool parseMAtrixFromRowStrings() {
-            int len = RowsAsStrings.Count;
-
-            if (Vertices == null || Vertices.Count != len)
+            try
             {
-                Vertices = new List<string>();
-            }
+                parseOk = true;
+                int len = RowsAsStrings.Count;
 
+                if (Vertices == null || Vertices.Count != len || !verticeNamesAreUnique())
+                {
+                    Vertices = new List<string>();
+                    for(int index = 0; index < len; index++)
+                    {
+                        Vertices.Add((char)('A' + index) + "");
+                    }
+                }
 
+                int y = 0;
+                rowsAsIntArrays = new int[len][];
+                foreach (string row in RowsAsStrings)
+                {
+                    string[] tokens = row.Split(TOKEN_DELIMITER);
+                    rowsAsIntArrays[y] = new int[len];
 
-            foreach(string row in RowsAsStrings)
-            {
-                string[] tokens = row.Split(TOKEN_DELIMITER);
-                if (tokens.Length != len) {
-                    errorMessage = "Matrix has to be square. Now there are " + len + " rows and apparently " + tokens.Length + "columns in the row " + row + ".";
-                    return false;
+                    if (tokens.Length != len)
+                    {
+                        errorMessage = "Matrix has to be square. Now there are " + len + " rows and apparently " + tokens.Length + " columns in the row " + row + ".";
+                        parseOk = false;
+                        return parseOk;
+                    }
+
+                    for (int x = 0; x < tokens.Length; x++)
+                    {
+                        int value = int.Parse(tokens[x].Trim());
+                        rowsAsIntArrays[y][x] = value;
+                    }
+                    y = y + 1;
                 }
             }
+            catch (Exception e) {
+                errorMessage = "Something wrong with parsing the matrix: " + e.Message;
+                parseOk = false;
+                return parseOk;
+            }
 
-            rowsAsIntArrays = new int[RowsAsStrings.Count][];
-            //TODO: Start parsing the cells and build the matrix from the values
+            parsedAdjacencyMatrix = new Matrix(Vertices, rowsAsIntArrays);
 
-                return true;
+            errorMessage = "All good.";
+            return parseOk;
         }
 
+        internal string GetErrorMessage()
+        {
+            return errorMessage;
+        }
+
+        internal Matrix GetMatrix() 
+        {
+            return parsedAdjacencyMatrix;
+        }
+
+        private bool verticeNamesAreUnique() {
+            foreach (string v in Vertices) 
+            {
+                if (Vertices.FindAll(x => x.Equals(v)).Count > 1)
+                    return false;
+            }
+            return true;
+        }
 
         public override string ToString()
         {
-            /* int index = 0;
-             if (Vertices == null || Vertices.Count < RowsAsStrings.Count) {
-                 Vertices = "";
-                 foreach ( var row in RowsAsStrings)
-                 {
-                     Vertices = Vertices + (char)('A' + index) + ",";
-                     index += 1;
-                 }
-             }
-             string[] VerticeNames = Vertices.Split(",");
-             index = 0;
-             StringBuilder sb = new StringBuilder();
-             foreach ( var row in RowsAsStrings)
-             {
-                 sb.Append(VerticeNames[index] + ": " + row + "\n");
-                 index += 1;
-             }
-             return sb.ToString();
-            */
-            return "TODO";
+            if (!parseOk) 
+            {
+                return errorMessage;
+            }
+            StringBuilder sb = new StringBuilder();
+            int y = 0;
+            foreach(int[] row in rowsAsIntArrays)
+            {
+                sb.Append(Vertices[y] + " [");
+                for (int x = 0; x < row.Length; x++) 
+                {
+                    sb.Append(row[x]);
+                    if (x < row.Length - 1)
+                        sb.Append(" ");
+                }
+                sb.Append("]\n");
+                y += 1;
+            }
+
+            return sb.ToString();
+
         }
 
     }
