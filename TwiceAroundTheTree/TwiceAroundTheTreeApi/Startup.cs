@@ -22,10 +22,22 @@ namespace TwiceAroundTheTreeApi
         }
 
         public IConfiguration Configuration { get; }
-
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost",
+                                                          "127.0.0.1",
+                                                          "https://localhost:44324");
+                                  });
+            });
+
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -47,6 +59,8 @@ namespace TwiceAroundTheTreeApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 

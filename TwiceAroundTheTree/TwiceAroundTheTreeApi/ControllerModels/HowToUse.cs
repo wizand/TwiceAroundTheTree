@@ -15,7 +15,8 @@ namespace TwiceAroundTheTreeApi.ControllerModels
                 sb.AppendLine();
                 sb.AppendLine();
                 sb.AppendLine("You can build a set of MSP graphs from the graph with the guid and you'll get anotehr set of guids for the MSP graphs") ;
-
+                sb.AppendLine();
+                sb.AppendLine("Few rules: Vertice names have to be unique and their count must match the size of the graph - obviously. Otherwise the vertice names will be discarded and A, B, C... are used instead.");
                 return sb.ToString();
                     
             } 

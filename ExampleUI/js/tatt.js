@@ -24,3 +24,27 @@ function updateEdgeString() {
     });
     document.getElementById("edgesString").innerHTML = concated;
 }
+
+
+var apiUrl = 'https://localhost:44324/api/GraphBuild/FromEdges';
+function putGraphFromEdges() 
+{
+
+    var Httpreq = new XMLHttpRequest();
+    Httpreq.open("GET", apiUrl, false);
+    
+    Httpreq.send(null);
+    return Httpreq.responseText;
+}
+
+const putGraphFromEdgesFetch = async () => {
+    const response = await fetch('https://localhost:44324/api/GraphBuild/FromEdges', {
+      method: 'PUT',
+      body: "sdfs", // string or object
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const myJson = await response.json(); //extract JSON from the http response
+    document.getElementById("putGraphFromEdgesTxt").innerHTML ="Data: " +  myJson;
+  }
