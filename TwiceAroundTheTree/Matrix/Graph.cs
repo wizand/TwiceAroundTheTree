@@ -85,7 +85,6 @@ namespace Graph
                         Edge e = new Edge(Vertices[y], Vertices[x], value);
                         Edges.Add(e);
                         addToEdgesDict(Vertices[y], e);
-                        
                     }
                 }
             }
