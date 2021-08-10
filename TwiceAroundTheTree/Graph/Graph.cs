@@ -11,6 +11,25 @@ namespace GraphComponents
         public Matrix AdjacencyMatrix { get; set; }
         private bool isDirected = false;
 
+
+        public Graph(Graph createCopyFrom)
+        {
+            List<Node> V = new List<Node>();
+            foreach (Node n in createCopyFrom.Vertices) 
+            {
+                V.Add(new Node(n.Name));
+            }
+            Vertices = V;
+
+            List<Edge> E = new List<Edge>();
+            foreach (Edge e in createCopyFrom.Edges) {
+                E.Add(new Edge(e.Begin, e.End, e.Weight));
+            }
+            Edges = E;
+
+            buildMatrixFromEdges();
+            isDirected = IsGraphDirected();
+        }
         public Graph(Matrix adjacencyMatrix) {
             AdjacencyMatrix = adjacencyMatrix;
             Vertices = AdjacencyMatrix.Vertices;

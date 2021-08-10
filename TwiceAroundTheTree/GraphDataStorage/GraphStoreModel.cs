@@ -26,7 +26,7 @@ namespace GraphDataStorage
         }
 
         public Graph GetGraphCopy() {
-            return new Graph(Graph.Edges, Graph.Vertices); //TODO: Create proper copy, this still hangs on to nodes..
+            return new Graph(Graph); //TODO: Create proper copy, this still hangs on to nodes..
         
         }
 
