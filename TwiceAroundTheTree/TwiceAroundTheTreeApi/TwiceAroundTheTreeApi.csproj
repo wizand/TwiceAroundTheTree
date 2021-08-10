@@ -9,7 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Matrix\Graph.csproj" />
+    <ProjectReference Include="..\GraphDataStorage\GraphDataStorage.csproj" />
+    <ProjectReference Include="..\Graph\Graph.csproj" />
   </ItemGroup>
 
 </Project>

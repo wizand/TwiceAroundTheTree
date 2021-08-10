@@ -1,4 +1,4 @@
-﻿using Graph;
+﻿using GraphComponents;
 using System;
 using System.Collections.Generic;
 using System.Text;

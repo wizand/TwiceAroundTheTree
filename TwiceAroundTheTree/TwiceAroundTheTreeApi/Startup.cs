@@ -31,9 +31,11 @@ namespace TwiceAroundTheTreeApi
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost",
-                                                          "127.0.0.1",
-                                                          "https://localhost:44324");
+                                      //TODO: Allowing all CORS origins is not recommended.
+                                      //AllowAnyOrigin: Allows CORS requests from all origins with any scheme (http or https).
+                                      //AllowAnyOrigin is insecure because any website can make cross-origin requests to the app.
+                                      //AllowAnyOrigin affects preflight requests and the Access-Control-Allow-Origin header.
+                                      builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                                   });
             });
 

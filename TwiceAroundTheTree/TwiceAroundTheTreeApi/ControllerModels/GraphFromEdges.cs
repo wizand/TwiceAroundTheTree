@@ -1,7 +1,8 @@
+using GraphComponents;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Graph;
+
 namespace TwiceAroundTheTreeApi.ControllerModels
 {
     public class GraphFromEdges
@@ -65,7 +66,13 @@ namespace TwiceAroundTheTreeApi.ControllerModels
                 errorMessage = "Exception while parsing edges: " + e.Message;
                 return false;
             }
+ 
             return true;
+        }
+
+        internal List<Node> GetVerticeNames()
+        {
+            return parsedNodes;
         }
 
         private void addToNodesList(params Node[] nodesToAdd )
