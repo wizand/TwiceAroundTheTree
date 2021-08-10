@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GraphComponents;
+using GraphDataStorage;
+using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TwiceAroundTheTreeApi.ControllerModels;
-using Graph;
 
 namespace TwiceAroundTheTreeApi.Controllers
 {
@@ -22,15 +20,18 @@ namespace TwiceAroundTheTreeApi.Controllers
         // GET: api/<GraphBuildController>
         [HttpPut]
         [Route("FromEdges")]
-        public string Put([FromQuery] GraphFromEdges graphParameters)
+        //TODO: Remove this eventually. It is easier to test with query parameters tho so its left here for convinience
+        //public string Put([FromQuery] GraphFromEdges graphParameters)
+        public string Put([FromBody] GraphFromEdges graphParameters)
         {
             bool ok = graphParameters.ParseEdgesFromEdgeStrings();
             if ( !ok )
             {
                 return graphParameters.GetErrorMessage() + "\n Please refer to <a href=\"https://localhost:44324/api/GraphBuild/HowToUse\">https://localhost:44324/api/GraphBuild/HowToUse</a>";
             }
-
-            return graphParameters.ToString();
+            Graph graphFromEdges = new Graph(graphParameters.GetEdges(), graphParameters.GetVerticeNames());
+            Guid storedId = DataCache.Instance.StoreGraph(graphFromEdges);
+            return graphParameters.ToString() + "\nGUID FOR GRAPH: " + storedId.ToString();
         }
 
         // POST api/<GraphBuildController>
@@ -43,23 +44,29 @@ namespace TwiceAroundTheTreeApi.Controllers
                 return graphParameters.GetErrorMessage() + "\n Please refer to <a href=\"https://localhost:44324/api/GraphBuild/HowToUse\">https://localhost:44324/api/GraphBuild/HowToUse</a>";
             }
 
-            Graph.Graph graphFromMatrix = new Graph.Graph(graphParameters.GetMatrix());
-
-            return graphParameters.ToString();
+            Graph graphFromMatrix = new Graph(graphParameters.GetMatrix());
+            Guid storedId = DataCache.Instance.StoreGraph(graphFromMatrix);
+            return graphParameters.ToString() + "\nGUID FOR GRAPH: " + storedId.ToString();
         }
 
-        // PUT api/<GraphBuildController>/5
-        [HttpGet("{id}")]
-        public Graph.Graph Get(Guid graphId)
+        // PUT api/<GraphBuildController>/AAAAAAAA-BBBB-cccc-DDDD-EEEEEEEEEEEE
+        [HttpGet("{graphId}")]
+        public Graph Get(Guid graphId)
         {
-            return null;
-           // return new Graph.Graph();
+            Graph g = DataCache.Instance.GetGraphFromStore(graphId);
+            g.Vertices.Add(new Node("testi"));
+            Graph gg = DataCache.Instance.GetGraphFromStore(graphId);
+            g.Vertices.Add(new Node("testi2"));
+            Graph ggg = DataCache.Instance.GetGraphFromStore(graphId);
+            return g;
         }
 
-        // DELETE api/<GraphBuildController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // DELETE api/<GraphBuildController>/AAAAAAAA-BBBB-cccc-DDDD-EEEEEEEEEEEE
+        [HttpDelete("{graphId}")]
+        public string Delete(Guid graphId)
         {
+            bool removeHappened = DataCache.Instance.RemoveFromStore(graphId);
+            return "Removed graphId=["+graphId+"]:" + removeHappened;
         }
     }
 }
