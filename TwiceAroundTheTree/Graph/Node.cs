@@ -1,4 +1,4 @@
-namespace Graph {
+namespace GraphComponents {
 
     public class Node {
         public Node(string name) {

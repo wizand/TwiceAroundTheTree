@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Graph
+
+namespace GraphComponents
 {
     public class Graph
     {
@@ -23,6 +20,23 @@ namespace Graph
 
      
         public Graph(List<Edge> edges, List<Node> vertices) {
+            Vertices = vertices;
+            Edges = edges;
+            foreach(Edge e in edges) 
+            {
+                addToEdgesDict(e.Begin, e);
+            }
+            buildMatrixFromEdges();
+            isDirected = IsGraphDirected(checkFromEdges: true); //Using the checkfromedges for example sake
+        }
+
+        private void buildMatrixFromEdges()
+        {
+            AdjacencyMatrix = new Matrix(Vertices);
+            foreach (Edge e in Edges) 
+            {
+                AdjacencyMatrix.MatrixTable[Vertices.IndexOf(e.Begin)][Vertices.IndexOf(e.End)] = e.Weight;
+            }
         }
 
         /// <summary>
@@ -43,21 +57,23 @@ namespace Graph
                 {
                     foreach (Edge edge in edgesFromNode[node])  
                     {
+                        Edge edgeToLookFor = edge.GetOtherWay();
                         IList<Edge> edgesForTheEndNode;
                         if (edgesFromNode.TryGetValue(edge.End, out edgesForTheEndNode)) //If the graph is not directed, there should be edges starting from the end node.
                         {
                             bool found = false;
                             foreach (Edge endNodeEdge in edgesForTheEndNode)
                             {
-                                if (endNodeEdge.Equals(edge))
+                                if (endNodeEdge.Equals(edgeToLookFor))
                                 {
                                     found = true;
+                                    break;
                                 }
-                                if (!found)
-                                {
-                                    //No edge fromthe end node to begin node so the graph is directed
-                                    return true;
-                                }
+                            }
+                            if (!found)
+                            {
+                                //No edge fromthe end node to begin node so the graph is directed
+                                return true;
                             }
                         }
                         else {

@@ -1,15 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using Graph;
+using GraphComponents;
 
 
-namespace Graph
+namespace GraphComponents
 {
     public class Matrix
     {
-        public  List<Node> Vertices { get; set; }
-        
+        public  List<Node> Vertices { get; set; } //Could we get rid or Vertices in matrix? Do we need them here?
 
+        public Matrix(List<Node> verticeNodes) 
+        {
+            Vertices = verticeNodes;
+            MatrixTable = new int[verticeNodes.Count][];
+            for (int y = 0; y < verticeNodes.Count; y++) {
+                MatrixTable[y] = new int[verticeNodes.Count];
+                for( int x = 0; x < verticeNodes.Count; x++)
+                {
+                    MatrixTable[y][x] = 0;
+                }
+                
+            }
+        }
         public Matrix(List<string> vertices, int[][] rowsAsIntArrays)
         {
             Vertices = new List<Node>();

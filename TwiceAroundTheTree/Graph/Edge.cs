@@ -1,4 +1,4 @@
-namespace Graph {
+namespace GraphComponents {
 
     public class Edge {
         private const int NOT_WEIGHTED = -9999;
@@ -29,40 +29,23 @@ namespace Graph {
             }
             
             Edge other = (Edge)obj;
-            if ( IsDirected ) 
+            
+            if ( Begin.Equals(other.Begin) && End.Equals(other.End) && Weight == other.Weight ) 
             {
-                if ( Begin == other.Begin && End == other.End && Weight == other.Weight ) 
-                {
-                    return true;
-                } 
-                else 
-                {
-                    return false;
-                }
+                return true;
             } 
             else 
             {
-                if ( (Begin == other.Begin || Begin == other.End) && (End == other.Begin || End == other.End) &&  Weight == other.Weight) 
-                {
-                    return true;
-                } 
-                else 
-                {
-                    return false;
-                }
+                return false;
             }
+     
         }
         
 
         public override int GetHashCode()
         {
-            if ( IsDirected ) 
-            {
-                string combined = Begin.ToString() + End.ToString() + Weight.ToString() + IsDirected.ToString();
+                string combined = Begin.ToString() + End.ToString() + Weight.ToString();
                 return combined.GetHashCode();
-            } else {
-                return Begin.GetHashCode() + End.GetHashCode() + Weight;
-            }
         }
 
         public override string ToString() {
