@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GraphDataStorage\GraphDataStorage.csproj" />
-    <ProjectReference Include="..\Graph\Graph.csproj" />
+    <ProjectReference Include="..\Graph\GraphComponents.csproj" />
   </ItemGroup>
 
 </Project>

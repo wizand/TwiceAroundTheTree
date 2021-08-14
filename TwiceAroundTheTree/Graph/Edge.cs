@@ -1,5 +1,4 @@
 namespace GraphComponents {
-
     public class Edge {
         private const int NOT_WEIGHTED = -9999;
 
