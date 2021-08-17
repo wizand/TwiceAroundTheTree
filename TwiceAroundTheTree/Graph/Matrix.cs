@@ -33,10 +33,6 @@ namespace GraphComponents
 
         public int[][] MatrixTable {get; set;}
 
-        public Matrix MinimumSpanninTreeFromMatrix {get; set;}
-        public bool IsMST {get ;set;} = false;
-
-
         /// <summary>
         /// If the graph is non directed, the edges go both ways. Lets say from A to C there should be an edge from C to A as well.
         /// So, 

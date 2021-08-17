@@ -1,6 +1,9 @@
+using System;
+
 namespace GraphComponents {
 
-    public class Node {
+    public class Node
+    {
         public Node(string name) {
             Name = name;
         }
@@ -14,8 +17,9 @@ namespace GraphComponents {
                 return false;
             }
 
-            return Name.Equals(((Node)obj).Name);
+            return ((Node)obj).Name.Equals(Name);
         }
+
 
         public override int GetHashCode()
         {
@@ -25,5 +29,7 @@ namespace GraphComponents {
         public override string ToString() {
             return Name;
         }
+
+
     }
 }

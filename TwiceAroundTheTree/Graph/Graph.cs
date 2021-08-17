@@ -1,16 +1,22 @@
-﻿using System.Collections.Generic;
-
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace GraphComponents
 {
     public class Graph
     {
         public List<Edge> Edges { get; set; } = new();
-        private Dictionary<Node, IList<Edge>> edgesFromNode = new();
+        [JsonIgnore]
+        public Dictionary<Node, IList<Edge>> EdgesFromNode { get; set; } = new();
         public List<Node> Vertices { get; set; }
         public Matrix AdjacencyMatrix { get; set; }
         private bool isDirected = false;
 
+
+        public List<Graph> MSPGraphs { get; set; } = new List<Graph>();
+        public bool IsMSP = false;
+        public int Weight;
 
         public Graph(Graph createCopyFrom)
         {
@@ -55,6 +61,7 @@ namespace GraphComponents
             foreach (Edge e in Edges) 
             {
                 AdjacencyMatrix.MatrixTable[Vertices.IndexOf(e.Begin)][Vertices.IndexOf(e.End)] = e.Weight;
+                addToEdgesDict(e.Begin, e);
             }
         }
 
@@ -72,13 +79,13 @@ namespace GraphComponents
             } 
             else //Use the edges to see if there is an edge going from each begin node to end node as well as end node to begin node. Dont use this, just an example.
             {
-                foreach (Node node in edgesFromNode.Keys) //Go trough all the edges there are
+                foreach (Node node in EdgesFromNode.Keys) //Go trough all the edges there are
                 {
-                    foreach (Edge edge in edgesFromNode[node])  
+                    foreach (Edge edge in EdgesFromNode[node])  
                     {
                         Edge edgeToLookFor = edge.GetOtherWay();
                         IList<Edge> edgesForTheEndNode;
-                        if (edgesFromNode.TryGetValue(edge.End, out edgesForTheEndNode)) //If the graph is not directed, there should be edges starting from the end node.
+                        if (EdgesFromNode.TryGetValue(edge.End, out edgesForTheEndNode)) //If the graph is not directed, there should be edges starting from the end node.
                         {
                             bool found = false;
                             foreach (Edge endNodeEdge in edgesForTheEndNode)
@@ -129,9 +136,9 @@ namespace GraphComponents
         private void addToEdgesDict(Node node, Edge e)
         {
             IList<Edge> edges;
-            if ( edgesFromNode.ContainsKey(node) )
+            if ( EdgesFromNode.ContainsKey(node) )
             { 
-                edges = edgesFromNode[node];
+                edges = EdgesFromNode[node];
             } 
             else
             {
@@ -143,7 +150,27 @@ namespace GraphComponents
                 edges.Add(e);
             }
 
-            edgesFromNode[node] = edges;
+            EdgesFromNode[node] = edges;
+        }
+
+        private Dictionary<Node, List<Node>> _Av = null;
+        public Dictionary<Node, List<Node>> AdjacencyVertices() { 
+            if ( _Av != null ) { return _Av; }
+
+            _Av = new Dictionary<Node, List<Node>>();
+            foreach (Node v in Vertices) 
+            {
+                List<Node> adjacentNodes = new List<Node>();
+                foreach (Edge e in Edges) 
+                { 
+                    if ( e.Begin.Equals(v) ) 
+                    {
+                        adjacentNodes.Add(e.End);
+                    }
+                }
+                _Av[v] = adjacentNodes;
+            }
+            return _Av;
         }
     }
 }

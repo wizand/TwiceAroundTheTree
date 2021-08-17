@@ -54,10 +54,7 @@ namespace TwiceAroundTheTreeApi.Controllers
         public Graph Get(Guid graphId)
         {
             Graph g = DataCache.Instance.GetGraphFromStore(graphId);
-            g.Vertices.Add(new Node("testi"));
-            Graph gg = DataCache.Instance.GetGraphFromStore(graphId);
-            g.Vertices.Add(new Node("testi2"));
-            Graph ggg = DataCache.Instance.GetGraphFromStore(graphId);
+          
             return g;
         }
 

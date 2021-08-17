@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GraphComponents.Algorithms.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,34 +44,132 @@ namespace GraphComponents.Algorithms
     */
 
 
-    class PrimsAlgorithm
+    public class PrimsAlgorithm
     {
         private Graph SourceGraph { get; set; }
+        private List<Node> V = new();
+        Dictionary<Node, List<Node>> Av = new();
+        private List<Edge> MSP = new List<Edge>();
 
-        private List<Node> nodes = new List<Node>();
-        Dictionary<Node, int> key = new Dictionary<Node, int>();
-        PriorityQueue pq = new PriorityQueue();
-        public PrimsAlgorithm(Graph graph) {
-            SourceGraph = graph;
-            nodes = graph.Vertices;
+        Graph MSPGraph;
 
-        }
-
-        public void FindMsp(Node beginNode) 
+        public PrimsAlgorithm(Graph graph)
         {
-            foreach (Node v in nodes) {
-                key[v] = int.MaxValue;
-            }
-
-            key[beginNode] = 0;
-
-            foreach (Node v in nodes)
-            {
-                
-            }
+            SourceGraph = graph;
+            V = graph.Vertices;
+            Av = SourceGraph.AdjacencyVertices();
 
         }
 
+        public int GetWeight() {
+            int totalWeight = 0;
+            foreach (Edge e in MSP) 
+            {
+                totalWeight += e.Weight;
+            }
+            return totalWeight;
+        
+        }
 
+        private bool isReVminusS(Node n, List<Node> V, List<Node> S)
+        {
+            List<Node> VminusS = CutList(V, S);
+            return VminusS.Contains(n);
+        }
+
+        public List<Node> CutList(List<Node> V, List<Node> S) 
+        {
+            List<Node> CutList = new List<Node>();
+            foreach (Node v in V) 
+            {
+                if (S.Contains(v))
+                {
+                    continue;
+                }
+                CutList.Add(v);
+            }
+
+            return CutList;
+
+        }
+
+        public void FindMspStartingFromNode(Node beginNode)
+        {
+            Dictionary<Node, int> d = new Dictionary<Node, int>();
+            Dictionary<Node, Edge> b = new Dictionary<Node, Edge>();
+            Dictionary<Node, List<Node>> Av = SourceGraph.AdjacencyVertices();
+            List<Node> S = new List<Node>();
+            MSP = new List<Edge>();
+
+            foreach (Node v in SourceGraph.Vertices)
+            {
+                d[v] = int.MaxValue;
+                b[v] = null;
+            }
+
+            d[beginNode] = 0;
+            while (S.Count < V.Count)
+            {
+                bool isFirst = true;
+                Node r = null;
+                int currentMin = 0;
+                //etsitään pistettä r, s.e. r ∈ (V − S) ja d(r) on mahdollsimman pieni
+                foreach ( Node nodeNotYetInS in CutList(V,S) )
+                {
+                    if (isFirst) {
+                        r = nodeNotYetInS;
+                        currentMin = d[nodeNotYetInS];
+                        isFirst = false;
+                        continue;
+                    }
+                    if (d[nodeNotYetInS] < currentMin) {
+                        r = nodeNotYetInS;
+                        currentMin = d[nodeNotYetInS];
+                    }
+                }
+
+                S.Add(r);
+
+                if ( b[r] != null)
+                {
+                    puu.Add(b[r]);
+                }
+
+                foreach (Node u in Av[r])
+                {
+                    if (S.Contains(u))
+                        continue;
+                    Edge e = GetEdgeBetween(u, r);
+                    if( e != null ) 
+                    {
+                        if (e.Weight < d[u]) 
+                        {
+                            d[u] = e.Weight;
+                            b[u] = e;
+                        }
+                    }
+
+                }
+
+            }
+            MSPGraph = new Graph(MSP, V);
+            MSPGraph.IsMSP = true;
+            MSPGraph.Weight = GetWeight();
+            SourceGraph.MSPGraphs.Add(MSPGraph);
+            
+        }
+
+        private Edge GetEdgeBetween(Node u, Node r)
+        {
+            foreach (Edge e in SourceGraph.EdgesFromNode[u])
+            {
+                if (e.End.Equals(r))
+                {
+                    return e;
+                }
+            }
+            return null;
+        }
     }
 }
+

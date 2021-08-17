@@ -85,6 +85,18 @@ namespace GraphComponents.Algorithms.Utilities
             
         }
 
+        public void SetPriorityTo(object item, int newPriority) 
+        {
+            if (!itemsMap.ContainsKey(item))
+            {
+                return;
+            }
+
+            itemsMap[item].Priority = newPriority;
+            items.Sort(priorityComparer);
+            return;
+        }
+
     }
 
     public class PriorityQueueItem 
