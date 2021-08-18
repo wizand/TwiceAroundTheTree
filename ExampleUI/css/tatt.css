@@ -1,0 +1,13 @@
+#graph-container {
+    top: 1%;
+    bottom: 15%;
+    left: 30%;
+    width: 40%;
+    position: absolute;
+    border-style: solid;
+    border-width: thin;
+}
+
+#mainContainer {
+    width: 25%;
+}
