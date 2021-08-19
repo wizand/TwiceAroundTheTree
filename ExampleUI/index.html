@@ -62,6 +62,9 @@
 <script src="js/sigmajs-1.2.1_src/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
 <script src="js/sigmajs-1.2.1_src/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
 <script src="js/sigmajs-1.2.1_src/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+<!--sigma layout stuff-->
+<script src="js/sigmajs-1.2.1_src/plugins/sigma.layout.forceAtlas2/supervisor.js"></script>
+<script src="js/sigmajs-1.2.1_src/plugins/sigma.layout.forceAtlas2/worker.js"></script>
 
 </head>
 
@@ -73,22 +76,19 @@
           <span class="input-group-text">API url</span>
           <input type="text" id="serverHost" class="form-control" placeholder="Please enter API url"
             aria-label="Begin-node" value="https://localhost:44324/api" onchange="updateServerHost()"/>
+        </div> 
       </div>
     </div>
     <div class="row">
       
       <div class="col">
         <h1>1. Describe your graph</h1>
-        <!--</div>
-              <div class="col">
-              -->
       </div>
       
     </div>
     <div class="row">
-
       <div class="col">
-        <h2>with Edges</h2>
+        <h3>with Edges</h2>
         <div class="input-group mb-3">
           <input type="text" id="edgeInsertBeginNodeTxt" class="form-control" placeholder="Begin node"
             aria-label="Begin-node">
@@ -98,31 +98,96 @@
           <input type="text" id="edgeInsertEndNodeTxt" class="form-control" placeholder="End node" aria-label="Server">
         </div>
 
-        <button class="btn btn-warning" onclick="addToEdgeList()">Add to edges</button>
-        <button class="btn btn-warning" onclick="cleaEdgeList()">Clear edges</button>
+        <button class="btn btn-warning" onclick="addToEdgeListFromInputs()">Add to edges</button>
+        <button class="btn btn-warning" onclick="clearEdgeList()">Clear edges</button>
+        <button class="btn btn-warning" onclick="addExampleGraphToEdgeList()">ExampleGraph</button>
         <div id="edgesDdDiv">
           <div class="dropdown">
             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
               Edges
             </a>
-          
-            <ul id="edgesDd" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-             
+              <ul id="edgesDd" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             </ul>
           </div>
-
-            <!--<select id="edgesDd">-->
-
             </select>
         </div>
         <p id="edgesString"></p>
       </div>
+
       <div class="row">
         <div class="col">
-          <button id="putGraphFromEdgesBtn" class="btn btn-info" onclick="putGraphFromEdgesFetch()">Get graph built from Edges</button>
+          <h1>2. Build a graph</h1>
+        </div>  
+      </div>
+      <div class="row">
+        <div class="col">
+          <h3>Use the API to build a graph from the given edges.</h2>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <button id="putGraphFromEdgesBtn" class="btn btn-info" onclick="putGraphFromEdgesFetch()">Build the graph from Edges</button>
           <p id="putGraphFromEdgesTxt"></p>
         </div>
+      </div>
 
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="input-group mb-3">
+          <span class="input-group-text">Graph id:</span>
+          <input type="text" id="txtLatestGuid" class="form-control" placeholder="GUID to request graph from APi with"
+            aria-label="guid-field" />
+        </div> 
+        <div class="input-group mb-3">
+          <span class="input-group-text">Info:</span>
+          <input type="text" id="txtLatestErrors" class="form-control" placeholder="Possible errors"
+            aria-label="errors-field" />
+        </div> 
+      </div>
+    </div>
+    
+    <div class="row">
+        <div class="col">
+          <h1>3. Get the graph</h1>
+        </div>  
+      </div>
+      <div class="row">
+        <div class="col">
+          <h3>Get the built graph object from the API using the id</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button id="getGraphWithGuidBtn" class="btn btn-info" onclick="getGraphWithGuid()">Get graph built from Edges</button>
+        </div>
+        <div class="col">
+          <button id="drawGraphBtn" class="btn btn-info" onclick="drawGraph()">Draw graph</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Graph id:</span>
+            <input type="text" id="txtLatestGraphDescription" class="form-control" placeholder="Graph data"
+              aria-label="graph-description-field" />
+          </div> 
+        </div>
+      </div>
+      <div class="row">   
+        <div class="col"> 
+          <div class="input-group mb-3">
+            <span class="input-group-text">Info:</span>
+            <input type="text" id="txtGetGraphError" class="form-control" placeholder="Possible errors"
+              aria-label="graph-description-field" />
+          </div> 
+        </div>
+      </div>
+      <div class="row">    
+        <div class="mb-3">
+          <textarea class="form-control" id="graphDescriptionTextArea" rows="6" placeholder="Graph description"></textarea>
+        </div>
       </div>
 
     </div>

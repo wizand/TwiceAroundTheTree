@@ -11,7 +11,7 @@ namespace GraphComponents
         public Dictionary<Node, IList<Edge>> EdgesFromNode { get; set; } = new();
         public List<Node> Vertices { get; set; }
         public Matrix AdjacencyMatrix { get; set; }
-        private bool isDirected = false;
+        public bool IsDirectedGraph { get; set; } = false;
 
 
         public List<Graph> MSPGraphs { get; set; } = new List<Graph>();
@@ -34,13 +34,13 @@ namespace GraphComponents
             Edges = E;
 
             buildMatrixFromEdges();
-            isDirected = IsGraphDirected();
+            IsDirectedGraph = IsGraphDirected();
         }
         public Graph(Matrix adjacencyMatrix) {
             AdjacencyMatrix = adjacencyMatrix;
             Vertices = AdjacencyMatrix.Vertices;
             buildEdgesFromMatrix();
-            isDirected = IsGraphDirected();
+            IsDirectedGraph = IsGraphDirected();
         }
 
      
@@ -52,7 +52,7 @@ namespace GraphComponents
                 addToEdgesDict(e.Begin, e);
             }
             buildMatrixFromEdges();
-            isDirected = IsGraphDirected(checkFromEdges: true); //Using the checkfromedges for example sake
+            IsDirectedGraph = IsGraphDirected(checkFromEdges: true); //Using the checkfromedges for example sake
         }
 
         private void buildMatrixFromEdges()
@@ -172,5 +172,50 @@ namespace GraphComponents
             }
             return _Av;
         }
+
+        public String GetGraphDescriptionAsJson() {
+            GraphJson gj = new GraphJson(Edges, Vertices, Weight, IsMSP, IsDirectedGraph);
+            string serialized = System.Text.Json.JsonSerializer.Serialize(gj);
+            return serialized;
+        }
+    }
+
+    internal class GraphJson { 
+    
+        public GraphJson(List<Edge> E, List<Node> V, int weight, bool isMsp, bool isDirected ) 
+        {
+            Vertices = V;
+            Weight = weight;
+            IsMSP = isMsp;
+            IsDirected = isDirected;
+            if (!isDirected)
+            {
+                Edges = removeDoubleEdges(E);
+            }
+            else {
+                Edges = E;
+            }
+        }
+
+        private List<Edge> removeDoubleEdges(List<Edge> E)
+        {
+            List<Edge> onewayEdges = new List<Edge>();
+            foreach( Edge e in E)
+            {
+                Edge otherWay = e.GetOtherWay();
+                if (onewayEdges.Contains(otherWay)) 
+                {
+                    continue;
+                }
+                onewayEdges.Add(e);
+            }
+            return onewayEdges;
+        }
+
+        public bool IsMSP { get; set; }
+        public int Weight { get; set; }
+        public bool IsDirected { get; set; }
+        public List<Edge> Edges { get; set; }
+        public List<Node> Vertices { get; set; }
     }
 }

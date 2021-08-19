@@ -1,4 +1,5 @@
 using GraphComponents;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +8,7 @@ namespace TwiceAroundTheTreeApi.ControllerModels
 {
     public class GraphFromEdges
     {
+        [SwaggerSchema("List of edges in the string. Will have to be in form of A-B-C where A=begin node name, B=The weight of the edge, C=Name of the end node.")]
         public List<string> EdgesStrings { get; set; }
         private List<Node> parsedNodes { get; set; }
         private string errorMessage { get; set; } = "All good.";

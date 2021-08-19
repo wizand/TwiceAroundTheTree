@@ -1,8 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace GraphComponents {
     public class Edge {
-        private const int NOT_WEIGHTED = -9999;
+        private const int DEFAULT_WEIGHT = 1;
 
-        public Edge(Node begin, Node end, int weight = NOT_WEIGHTED, bool isDirected = false) {
+        public Edge(Node begin, Node end, int weight = DEFAULT_WEIGHT, bool isDirected = false) {
             Begin = begin; 
             End = end;
             Weight = weight;
@@ -11,7 +13,8 @@ namespace GraphComponents {
 
         public Node Begin { get; set; }
         public Node End { get; set; }
-        public int Weight {get; set; } = -9999;
+        public int Weight {get; set; } = 1;
+        [JsonIgnore]
         public bool IsDirected {get;set;} = false;
 
 
@@ -48,12 +51,7 @@ namespace GraphComponents {
         }
 
         public override string ToString() {
-            string weightString = "";
-            if ( Weight != NOT_WEIGHTED) 
-            {
-                weightString = Weight +"-";
-            } 
-           return "<" + Begin + "-" + weightString + End + ">";
+           return "<" + Begin + "-" + Weight + "-" + End + ">";
         }
 
     }

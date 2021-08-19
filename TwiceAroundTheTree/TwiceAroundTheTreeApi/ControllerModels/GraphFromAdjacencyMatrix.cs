@@ -1,4 +1,5 @@
 ﻿using GraphComponents;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,9 @@ namespace TwiceAroundTheTreeApi.ControllerModels
     public class GraphFromAdjacencyMatrix {
 
         private const string TOKEN_DELIMITER = ",";
+        [SwaggerSchema("List of verice names. If empty or not valid, capital letters starting from A are used.")]
         public List<string> Vertices { get; set; }
+        [SwaggerSchema("String representation of the adjacency matrix of the graph. Each row is as it's own string where the cells are separated as ,. 0=No link, other number represents the weight of the link.")]
         public List<string> RowsAsStrings { get; set; }
         private int[][] rowsAsIntArrays { get; set; }
 

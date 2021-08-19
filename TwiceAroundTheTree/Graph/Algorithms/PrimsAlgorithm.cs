@@ -97,7 +97,6 @@ namespace GraphComponents.Algorithms
         {
             Dictionary<Node, int> d = new Dictionary<Node, int>();
             Dictionary<Node, Edge> b = new Dictionary<Node, Edge>();
-            Dictionary<Node, List<Node>> Av = SourceGraph.AdjacencyVertices();
             List<Node> S = new List<Node>();
             MSP = new List<Edge>();
 
@@ -132,7 +131,7 @@ namespace GraphComponents.Algorithms
 
                 if ( b[r] != null)
                 {
-                    puu.Add(b[r]);
+                    MSP.Add(b[r]);
                 }
 
                 foreach (Node u in Av[r])
