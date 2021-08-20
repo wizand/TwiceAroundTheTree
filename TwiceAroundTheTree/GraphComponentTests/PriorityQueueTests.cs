@@ -8,8 +8,8 @@ namespace GraphComponentTests
     public class PriorityQueueTests
     {
 
-        public PriorityQueue InitializePriorityQueue(int itemNumber) {
-            PriorityQueue pq = new PriorityQueue();
+        public PriorityQueue<Node> InitializePriorityQueue(int itemNumber) {
+            PriorityQueue<Node> pq = new PriorityQueue<Node>();
 
 
             for (int i = 0; i < itemNumber; i++) {
@@ -24,7 +24,7 @@ namespace GraphComponentTests
         public void CanAddItemsToPriorityQueue()
         {
 
-            PriorityQueue pq = InitializePriorityQueue(4);
+            PriorityQueue<Node> pq = InitializePriorityQueue(4);
 
             Assert.True(pq.GetQueueSize() == 4);
 
@@ -34,7 +34,7 @@ namespace GraphComponentTests
 
         [Fact]
         public void ShouldBeInOrderByPriority() {
-            PriorityQueue pq = new PriorityQueue();
+            PriorityQueue<Node> pq = new PriorityQueue<Node>();
             pq.Insert(new Node("HighPriority"), 10);
 
             Node maxPriority = (Node)pq.Max();
@@ -56,7 +56,7 @@ namespace GraphComponentTests
         [Fact]
         public void MaxExctractionRemovesItemFromTop()
         {
-            PriorityQueue pq = new PriorityQueue();
+            PriorityQueue<Node> pq = new PriorityQueue<Node>();
             pq.Insert(new Node("HigherPriority"), 100);
             pq.Insert(new Node("HighPriority"), 10);
             pq.Insert(new Node("LowPriority"), 5);
@@ -82,7 +82,7 @@ namespace GraphComponentTests
         [Fact]
         public void MinExctractionRemovesItemFromBottom()
         {
-            PriorityQueue pq = new PriorityQueue();
+            PriorityQueue<Node> pq = new PriorityQueue<Node>();
             pq.Insert(new Node("HigherPriority"), 100);
             pq.Insert(new Node("HighPriority"), 10);
             pq.Insert(new Node("LowPriority"), 5);
@@ -115,7 +115,7 @@ namespace GraphComponentTests
         [Fact]
         public void IncreaseShouldIncreasePriorityByOne() 
         {
-            PriorityQueue pq = new PriorityQueue();
+            PriorityQueue<Node> pq = new PriorityQueue<Node>();
             pq.Insert(new Node("HigherPriority"), 100);
             pq.Insert(new Node("HighPriority"), 10);
             pq.Insert(new Node("LowPriority"), 5);
@@ -144,7 +144,7 @@ namespace GraphComponentTests
         [Fact]
         public void DecreaseShouldDecreasePriorityByOne()
         {
-            PriorityQueue pq = new PriorityQueue();
+            PriorityQueue<Node> pq = new PriorityQueue<Node>();
             pq.Insert(new Node("HigherPriority"), 100);
             pq.Insert(new Node("HighPriority"), 10);
             pq.Insert(new Node("LowPriority"), 5);
@@ -173,7 +173,7 @@ namespace GraphComponentTests
         [Fact]
         public void ChangingPriorirtyShouldReorderQueue()
         {
-            PriorityQueue pq = new PriorityQueue();
+            PriorityQueue<Node> pq = new PriorityQueue<Node>();
             pq.Insert(new Node("HigherPriority"), 10);
             pq.Insert(new Node("LowPriority"), 9);
 

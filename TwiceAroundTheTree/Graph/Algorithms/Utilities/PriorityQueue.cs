@@ -6,46 +6,46 @@ using System.Threading.Tasks;
 
 namespace GraphComponents.Algorithms.Utilities
 {
-    public class PriorityQueue
+    public class PriorityQueue<T>
     {
-        private PriorityComparer priorityComparer = new PriorityComparer();
-        List<PriorityQueueItem> items = new List<PriorityQueueItem>();
-        Dictionary<object, PriorityQueueItem> itemsMap = new Dictionary<object, PriorityQueueItem>();
+        private PriorityComparer<T> priorityComparer = new PriorityComparer<T>();
+        List<PriorityQueueItem<T>> items = new List<PriorityQueueItem<T>>();
+        Dictionary<T, PriorityQueueItem<T>> itemsMap = new Dictionary<T, PriorityQueueItem<T>>();
 
-        public void Insert(object item, int priority)
+        public void Insert(T item, int priority)
         {
-            PriorityQueueItem pqi = new PriorityQueueItem(item, priority);
+            PriorityQueueItem<T> pqi = new PriorityQueueItem<T>(item, priority);
             items.Add(pqi);
             itemsMap.Add(item, pqi);
             items.Sort(priorityComparer);
         }
 
-        public object Max() {
-            return items?.First()?.DataItem;
+        public T Max() {
+            return items.First().DataItem;
         }
 
-        public object Min()
+        public T Min()
         {
-            return items?.Last()?.DataItem;
+            return items.Last().DataItem;
         }
 
-        public object ExtractMax()
+        public T ExtractMax()
         {
-            object item = items?.First()?.DataItem;
+            T item = items.First().DataItem;
             items.Remove(items.First());
             itemsMap.Remove(item);
             return item;
         }
 
-        public object ExtractMin()
+        public T ExtractMin()
         {
-            object item = items?.Last()?.DataItem;
+            T item = items.Last().DataItem;
             items.Remove(items.Last());
             itemsMap.Remove(item);
             return item;
         }
 
-        public bool Increase(object item)
+        public bool Increase(T item)
         {
             if (!itemsMap.ContainsKey(item)) 
             {
@@ -57,7 +57,7 @@ namespace GraphComponents.Algorithms.Utilities
             return true;
         }
 
-        public bool Decrease(object item)
+        public bool Decrease(T item)
         {
             if (!itemsMap.ContainsKey(item))
             {
@@ -73,9 +73,9 @@ namespace GraphComponents.Algorithms.Utilities
             return items.Count;
         }
 
-        public int GetItemPriority(object item) 
+        public int GetItemPriority(T item) 
         {
-            PriorityQueueItem pqItem;
+            PriorityQueueItem<T> pqItem;
             if (itemsMap.TryGetValue(item, out pqItem)) 
             {
                 return pqItem.Priority;
@@ -85,7 +85,7 @@ namespace GraphComponents.Algorithms.Utilities
             
         }
 
-        public void SetPriorityTo(object item, int newPriority) 
+        public void SetPriorityTo(T item, int newPriority) 
         {
             if (!itemsMap.ContainsKey(item))
             {
@@ -99,20 +99,20 @@ namespace GraphComponents.Algorithms.Utilities
 
     }
 
-    public class PriorityQueueItem 
+    public class PriorityQueueItem<T> 
     {
-        public PriorityQueueItem(object item, int priority) 
+        public PriorityQueueItem(T item, int priority) 
         {
             DataItem = item;
             Priority = priority;
         }
-        public object DataItem { get; set; }
+        public T DataItem { get; set; }
         public int Priority { get; set; }
     }
 
-    class PriorityComparer : IComparer<PriorityQueueItem>
+    class PriorityComparer<T> : IComparer<PriorityQueueItem<T>>
     {
-        public int Compare(PriorityQueueItem x, PriorityQueueItem y)
+        public int Compare(PriorityQueueItem<T> x, PriorityQueueItem<T> y)
         {
             
             if (x.Priority == y.Priority)
