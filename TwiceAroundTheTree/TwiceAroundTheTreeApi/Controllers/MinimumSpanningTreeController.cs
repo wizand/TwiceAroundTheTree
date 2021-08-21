@@ -19,17 +19,36 @@ namespace TwiceAroundTheTreeApi.Controllers
         {
 
             Graph graph = DataCache.Instance.GetGraphFromStore(graphId);
+
+            if (graph == null)
+            {
+                return BadRequest("No graph for id " + graphId);
+            }
+            
             if ( graph.IsDirectedGraph )
             {
                 return BadRequest("Cannot perform MSP search for directed graph.");
-                
             }
+
+            PrimsAlgorithm pa;
+            for (int i = 0; i < graph.Vertices.Count; i++)
+            {
+                pa = new PrimsAlgorithm(graph, i);
+                pa.FindMsp();
+            }
+
+            KruskalsAlgorithm ka = new KruskalsAlgorithm(graph);
+            ka.FindMsp();
+
+            string combined = "[";
+            foreach (Graph mspGraph in graph.MSPGraphs) 
+            {
+                combined += mspGraph.GetGraphDescriptionAsJson() + ",";
+            }
+            //Rempove the last comma and end json array
+            combined = combined.Substring(0, combined.Length-1) +"]";
             
-            PrimsAlgorithm pa = new PrimsAlgorithm(graph, 0);
-            pa.FindMsp();
-            var MSPGraph = graph.MSPGraphs[0];
-            string MSPGraphJson = MSPGraph.GetGraphDescriptionAsJson();
-            return Ok(MSPGraphJson);
+            return Ok(combined);
         }
     }
 }

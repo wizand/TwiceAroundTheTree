@@ -28,8 +28,6 @@ namespace GraphComponents.Algorithms
 
         public KruskalsAlgorithm(Graph sourceGraph) : base(sourceGraph)
         {
-            
-            
         }
 
 
@@ -75,8 +73,8 @@ namespace GraphComponents.Algorithms
                 if (ds.FindSet(e.Begin) != ds.FindSet(e.End)) 
                 {
                     F.Add(e);
-                    //  F.Add(e.GetOtherWay());
-                    //ds.Union(ds.FindSet(e.Begin), ds.FindSet(e.End));
+                    //F.Add(e.GetOtherWay());
+                    
                     ds.Union(ds.FindSet(e.Begin), ds.FindSet(e.End));
                 }
             }
