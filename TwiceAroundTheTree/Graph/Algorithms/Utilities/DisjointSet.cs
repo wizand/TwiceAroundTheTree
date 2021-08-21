@@ -45,8 +45,11 @@ namespace GraphComponents.Algorithms.Utilities
 
         public void Union(T dataA, T dataB) 
         {
-            List<T> aSet = sets[FindSet(dataA)];
-            List<T> bSet = sets[FindSet(dataB)];
+
+            T parentSetA = FindSet(dataA);
+            T parentSetB = FindSet(dataB);
+            List<T> aSet = sets[parentSetA];
+            List<T> bSet = sets[parentSetB];
             
             //Copy the itesm from dataB set to the dataA set
             foreach (T bItem in bSet) 
@@ -60,13 +63,24 @@ namespace GraphComponents.Algorithms.Utilities
 
             //Clean up the old dataB set
             sets.Remove(FindSet(dataB));
-            
-            //Update the new parent for dataB
-            parent[dataB] = parent[dataA];
 
+            //Update the new parent for dataB
+            //parent[dataB] = parent[dataA];
+            updateAllParents(dataB, dataA);
         }
 
+    
+        private void updateAllParents(T from, T to) 
+        {
+            foreach(T parentKey in parent.Keys) 
+            {
+                if (parent[parentKey].Equals(from))
+                    parent[parentKey] = to;
+            }
+        }
     }
+
+
 
     internal class SetNode {
 

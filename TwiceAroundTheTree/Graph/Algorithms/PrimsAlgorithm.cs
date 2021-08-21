@@ -44,37 +44,20 @@ namespace GraphComponents.Algorithms
     */
 
 
-    public class PrimsAlgorithm
+    public class PrimsAlgorithm : AbstractMspAlgorithm
     {
-        private Graph SourceGraph { get; set; }
-        private List<Node> V = new();
-        Dictionary<Node, List<Node>> Av = new();
-        private List<Edge> MSP = new List<Edge>();
 
-        Graph MSPGraph;
 
-        public PrimsAlgorithm(Graph graph)
+        Dictionary<Node, List<Node>> Av;
+        private Node startNode;
+
+        
+
+        public PrimsAlgorithm(Graph graph, int startingNodeIndex) : base(graph)
         {
-            SourceGraph = graph;
-            V = graph.Vertices;
+            this.startNode = V[startingNodeIndex]; 
             Av = SourceGraph.AdjacencyVertices();
 
-        }
-
-        public int GetWeight() {
-            int totalWeight = 0;
-            foreach (Edge e in MSP) 
-            {
-                totalWeight += e.Weight;
-            }
-            return totalWeight;
-        
-        }
-
-        private bool isReVminusS(Node n, List<Node> V, List<Node> S)
-        {
-            List<Node> VminusS = CutList(V, S);
-            return VminusS.Contains(n);
         }
 
         public List<Node> CutList(List<Node> V, List<Node> S) 
@@ -93,8 +76,9 @@ namespace GraphComponents.Algorithms
 
         }
 
-        public void FindMspStartingFromNode(Node beginNode)
+        public override void FindMsp() 
         {
+            Node beginNode = startNode;
             Dictionary<Node, int> d = new Dictionary<Node, int>();
             Dictionary<Node, Edge> b = new Dictionary<Node, Edge>();
             List<Node> S = new List<Node>();

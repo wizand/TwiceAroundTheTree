@@ -7,19 +7,41 @@ using System.Threading.Tasks;
 
 namespace GraphComponents.Algorithms
 {
-    public class KruskalsAlgorithm
+    /// <summary>
+    /// This is approximate implementation of Kruskal's algorithm for finding the MSP of a graph.
+    /// 
+    /// 
+    /// From https://en.wikipedia.org/wiki/Kruskal%27s_algorithm
+    /// Kruskal's algorithm finds a minimum spanning forest of an undirected edge-weighted graph. 
+    /// If the graph is connected, it finds a minimum spanning tree. 
+    /// (A minimum spanning tree of a connected graph is a subset of the edges that forms a tree that includes every vertex, where the sum of the weights of all the edges in the tree is minimized. 
+    /// For a disconnected graph, a minimum spanning forest is composed of a minimum spanning tree for each connected component.) 
+    /// 
+    /// It is a greedy algorithm in graph theory as in each step it adds the next lowest-weight edge that will not form a cycle to the minimum spanning forest.[1]
+    /// 
+    /// 
+    /// 
+    /// </summary>
+    public class KruskalsAlgorithm : AbstractMspAlgorithm
     {
-        public Graph SourceGraph;
-        public List<Edge> MSP;
 
-        public KruskalsAlgorithm(Graph sourceGraph) 
+
+        public KruskalsAlgorithm(Graph sourceGraph) : base(sourceGraph)
         {
-            SourceGraph = sourceGraph;
-            FindMsp();
+            
+            
         }
 
 
         /**
+         * Algorithm
+                create a forest F (a set of trees), where each vertex in the graph is a separate tree
+                create a set S containing all the edges in the graph
+                while S is nonempty and F is not yet spanning
+                remove an edge with minimum weight from S
+                if the removed edge connects two different trees then add it to the forest F, combining two trees into a single tree
+                At the termination of the algorithm, the forest forms a minimum spanning forest of the graph. If the graph is connected, the forest has a single component and forms a minimum spanning tree.
+         * 
          * algorithm Kruskal(G) is
             F:= ∅
             for each v ∈ G.V do
@@ -30,35 +52,43 @@ namespace GraphComponents.Algorithms
                     UNION(FIND-SET(u), FIND-SET(v))
             return F
         */
-        public void FindMsp()
+        public override void FindMsp()
         {
             List<Edge> F = new List<Edge>();
-            
-            List<Edge> S = new List<Edge>();
+            MSP = new List<Edge>();
             DisjointSet<Node> ds = new DisjointSet<Node>();
-            foreach (Node v in SourceGraph.Vertices) 
+            PriorityQueue<Edge> pq = new PriorityQueue<Edge>();
+
+            foreach (Node v in V) 
             {
                 ds.MakeSet(v);
             }
 
-            PriorityQueue<Edge> pq = new PriorityQueue<Edge>();
             foreach (Edge e in SourceGraph.Edges) 
             {
                 pq.Insert(e, e.Weight);
             }
+
             while( pq.GetQueueSize() > 0)
             {
                 Edge e = pq.ExtractMin();
                 if (ds.FindSet(e.Begin) != ds.FindSet(e.End)) 
                 {
                     F.Add(e);
-                    F.Add(e.GetOtherWay());
+                    //  F.Add(e.GetOtherWay());
+                    //ds.Union(ds.FindSet(e.Begin), ds.FindSet(e.End));
                     ds.Union(ds.FindSet(e.Begin), ds.FindSet(e.End));
                 }
             }
 
+            foreach (Edge mspEdge in F) {
+                MSP.Add(mspEdge);
+            }
 
-
+            MSPGraph = new Graph(MSP, V);
+            MSPGraph.IsMSP = true;
+            MSPGraph.Weight = GetWeight();
+            SourceGraph.MSPGraphs.Add(MSPGraph);
 
         }
     }

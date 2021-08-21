@@ -25,8 +25,8 @@ namespace TwiceAroundTheTreeApi.Controllers
                 
             }
             
-            PrimsAlgorithm pa = new PrimsAlgorithm(graph);
-            pa.FindMspStartingFromNode(graph.Vertices[0]);
+            PrimsAlgorithm pa = new PrimsAlgorithm(graph, 0);
+            pa.FindMsp();
             var MSPGraph = graph.MSPGraphs[0];
             string MSPGraphJson = MSPGraph.GetGraphDescriptionAsJson();
             return Ok(MSPGraphJson);
