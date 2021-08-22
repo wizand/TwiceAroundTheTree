@@ -9,16 +9,20 @@ using Xunit;
 
 namespace GraphComponentTests
 {
-    public class PrimsAlgorithmTests : MspAlgoritmTests
+    public class DepthFirstWalkTests
     {
 
         [Fact]
-        public void PrimsAlgorithmFindsMspWithCorrectWeight()
+        public void CreatesWalkFromMsp() 
         {
             Graph testGraph = ExampleGraphContainer.Get.SmallTestGraph();
-            PrimsAlgorithm pa = new PrimsAlgorithm(testGraph, 0);
-            pa.FindMsp();
-            Assert.True(true);
+            PrimsAlgorithm prims = new PrimsAlgorithm(testGraph, 0);
+            prims.FindMsp();
+            DepthFirstWalk dfw = new DepthFirstWalk(prims.MSPGraph,0);
+            dfw.CreateWalk();
+            Assert.True(false);
+
         }
+
     }
 }

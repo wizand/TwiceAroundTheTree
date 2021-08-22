@@ -122,7 +122,7 @@ namespace GraphComponents.Algorithms
                 {
                     if (S.Contains(u))
                         continue;
-                    Edge e = GetEdgeBetween(u, r);
+                    Edge e = SourceGraph.GetEdgeBetween(u, r);
                     if( e != null ) 
                     {
                         if (e.Weight < d[u]) 
@@ -140,18 +140,6 @@ namespace GraphComponents.Algorithms
             MSPGraph.Weight = GetWeight();
             SourceGraph.MSPGraphs.Add(MSPGraph);
             
-        }
-
-        private Edge GetEdgeBetween(Node u, Node r)
-        {
-            foreach (Edge e in SourceGraph.EdgesFromNode[u])
-            {
-                if (e.End.Equals(r))
-                {
-                    return e;
-                }
-            }
-            return null;
         }
     }
 }

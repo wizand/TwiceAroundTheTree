@@ -173,10 +173,22 @@ namespace GraphComponents
             return _Av;
         }
 
-        public String GetGraphDescriptionAsJson() {
+        public string GetGraphDescriptionAsJson() {
             GraphJson gj = new GraphJson(Edges, Vertices, Weight, IsMSP, IsDirectedGraph);
             string serialized = System.Text.Json.JsonSerializer.Serialize(gj);
             return serialized;
+        }
+
+        public Edge GetEdgeBetween(Node u, Node r)
+        {
+            foreach (Edge e in EdgesFromNode[u])
+            {
+                if (e.End.Equals(r))
+                {
+                    return e;
+                }
+            }
+            return null;
         }
     }
 
