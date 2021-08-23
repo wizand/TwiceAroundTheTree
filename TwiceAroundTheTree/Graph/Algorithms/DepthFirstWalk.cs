@@ -68,5 +68,13 @@ namespace GraphComponents.Algorithms
         }
 
 
+
+        public void CreateWalk2()
+        {
+
+
+        }
+
+
     }
 }
