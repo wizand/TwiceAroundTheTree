@@ -48,5 +48,23 @@ namespace GraphComponentTests
 
         }
 
+        public Graph G1TestGraph()
+        {
+            List<string> vertices = new() { "a", "b", "c", "d", "e", "f" };
+            int[][] adjacencyMatrix = new int[][]
+            {
+               new [] { 0,  26, 31, 27, 39, 0 },
+               new [] { 26, 0,  46, 0,  25, 36 },
+               new [] { 31, 46, 0,  0,  0,  42 },
+               new [] { 27, 0,  0,  0,  33,  40 },
+               new [] { 39, 25, 0,  33,  0,  36 },
+               new [] { 0,  36,  42,  40,  36,  0 }
+            };
+            Matrix m = new Matrix(vertices, adjacencyMatrix);
+            Graph g = new Graph(m);
+            return g;
+
+        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GraphComponents.Algorithms.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,14 +12,23 @@ namespace GraphComponents.Algorithms
         public Graph SourceGraph { get; set; }
         public Node BeginNode { get; set; }
         public Dictionary<Node, List<Node>> Av;
-        List<Edge> Forest = new List<Edge>();
+        public List<Edge> CompleteWalkAsEdges { get; set; } = new List<Edge>();
         List<Node> V;
+        List<Edge> E;
+        public List<Node> CompleteWalkAsNodes { get; set; } = new List<Node>();
 
         public DepthFirstWalk(Graph sourceGraph, int startWalkFromModeIndex) 
         {
+
+            //TODO: ..this probably should check that the graph is msp or at least that it doesnt contain circuits?
+
             SourceGraph = sourceGraph;
+            
             BeginNode = SourceGraph.Vertices[startWalkFromModeIndex];
+            E = new List<Edge>();
             V = new List<Node>();
+
+            //Initialize the nodes so that the begin node comes first.
             V.Add(BeginNode);
             foreach (Node v in SourceGraph.Vertices) {
                 if (!V.Contains(v)) 
@@ -27,54 +37,85 @@ namespace GraphComponents.Algorithms
                 }
             }
             Av = SourceGraph.AdjacencyVertices();
+            foreach (Node n in Av.Keys) 
+            {
+                foreach ( Node v in Av[n] ) 
+                {
+                    List<Node> adjacents = Av[v];
+                    if (adjacents.Contains(n)) 
+                    {
+                        continue;
+                    }
+                    else 
+                    {
+                        adjacents.Add(n);
+                    }
+                    Av[v] = adjacents;
+                }
+            }
+
+            foreach (Edge e in SourceGraph.Edges ) 
+            {
+                E.Add(e);
+                Edge otherWayE = e.GetOtherWay();
+                if (!E.Contains(otherWayE))
+                    E.Add(otherWayE);
+                    
+            }
+
+
         }
 
         public void CreateWalk() {           
             int i = 1;
-            Dictionary<Node, int> jnum = new();
-
+            Dictionary<Node, int> orderNumber = new();
 
             foreach (Node u in V) 
             {
-                jnum[u] = 0;
+                orderNumber[u] = 0;
             }
 
             foreach (Node u in V)
             {
-                if (jnum[u] == 0) 
+                if (orderNumber[u] == 0) 
                 {
-                    dfkulku(i, u, jnum);
+                    CompleteWalkAsNodes.Add(u);
+                    depthFirstWalking(i, u, orderNumber);
                 }
-
             }
 
 
 
         }
 
-        private void dfkulku(int i, Node u, Dictionary<Node, int> jnum) 
+        private void depthFirstWalking(int i, Node u, Dictionary<Node, int> orderNumber) 
         {
-            jnum[u] = i;
-            i += 1;
+            orderNumber[u] = i;
+            i = i + 1;
             foreach (Node r in Av[u]) 
             {
-                if (jnum[r] == 0) 
+                if (orderNumber[r] == 0) 
                 {
-                    Forest.Add(SourceGraph.GetEdgeBetween(u, r));
-                    dfkulku(i, r, jnum);
+                    CompleteWalkAsNodes.Add(r);
+                    CompleteWalkAsEdges.Add(GetEdgeBetween(u,r));
+                    depthFirstWalking(i, r, orderNumber);
+                    CompleteWalkAsNodes.Add(u);
+                    CompleteWalkAsEdges.Add(GetEdgeBetween(r, u));
                 }
             }
-
         }
 
 
-
-        public void CreateWalk2()
+        public Edge GetEdgeBetween(Node u, Node r)
         {
-
-
+            foreach (Edge e in E)
+            {
+                if (e.Begin.Equals(u) && e.End.Equals(r))
+                    return e;
+            }
+            return null;
         }
-
-
     }
+
+
 }

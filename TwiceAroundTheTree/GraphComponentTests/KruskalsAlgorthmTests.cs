@@ -14,7 +14,7 @@ namespace GraphComponentTests
 
 
         [Fact]
-        public void KruskalFindsMSP()
+        public void KruskalFindsMSPWithCorrectWeight()
         {
             Graph testGraph =ExampleGraphContainer.Get.SmallTestGraph();
             KruskalsAlgorithm ka = new KruskalsAlgorithm(testGraph);
