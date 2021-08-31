@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace GraphComponents
@@ -16,7 +15,28 @@ namespace GraphComponents
 
         public List<Graph> MSPGraphs { get; set; } = new List<Graph>();
         public bool IsMSP = false;
-        public int Weight;
+        public bool IsHamiltonianCircuit = false;
+        public List<Graph> HamiltonianCircuitGraphs { get; set; } = new();
+        private int? _weight = null;
+        public int Weight {
+            get
+            {
+                if (_weight == null) 
+                {
+                    _weight = 0;
+                    foreach(Edge e in Edges)
+                    {
+                        _weight = _weight + e.Weight;
+                    }
+                    _weight = _weight / 2;
+                }
+                return _weight.Value;
+            }
+            set
+            {
+                _weight = value;
+            }
+        }
 
         public Graph(Graph createCopyFrom)
         {
@@ -179,7 +199,7 @@ namespace GraphComponents
             return serialized;
         }
 
-        public Edge GetEdgeBetween(Node u, Node r)
+        public Edge GetEdgeBetween(Node u, Node r, bool directionMatters=true)
         {
             foreach (Edge e in EdgesFromNode[u])
             {
@@ -188,6 +208,18 @@ namespace GraphComponents
                     return e;
                 }
             }
+
+            if ( !directionMatters ) 
+            {
+                foreach (Edge e in EdgesFromNode[r])
+                {
+                    if (e.End.Equals(u))
+                    {
+                        return e;
+                    }
+                }
+            }
+
             return null;
         }
     }

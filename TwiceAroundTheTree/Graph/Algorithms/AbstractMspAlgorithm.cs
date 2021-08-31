@@ -24,7 +24,8 @@ namespace GraphComponents.Algorithms
             {
                 totalWeight += e.Weight;
             }
-            return totalWeight;
+            MSPGraph.Weight = totalWeight;
+            return MSPGraph.Weight;
 
         }
     }
