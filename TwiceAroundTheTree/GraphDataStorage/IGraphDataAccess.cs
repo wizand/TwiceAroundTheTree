@@ -9,7 +9,7 @@ namespace GraphDataStorage
 {
     public interface IGraphDataAccess
     {
-
+        public int GetCacheSize();
         public Guid StoreGraph(Graph graphToStore);
         public Graph GetGraphFromStore(Guid id);
         public bool RemoveFromStore(Guid id);

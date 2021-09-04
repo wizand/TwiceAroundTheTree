@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphComponents", "Graph\Gr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphDataStorage", "GraphDataStorage\GraphDataStorage.csproj", "{597D3C30-B168-4A00-84FF-29BF7E137490}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphComponentTests", "GraphComponentTests\GraphComponentTests.csproj", "{A311030A-EF4B-48C5-898B-862B57A5DFCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphComponentTests", "GraphComponentTests\GraphComponentTests.csproj", "{A311030A-EF4B-48C5-898B-862B57A5DFCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphDataStorageTests", "GraphDataStorageTests\GraphDataStorageTests.csproj", "{C42F7441-DF05-43BA-BCE3-6FA3B32ADF09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A311030A-EF4B-48C5-898B-862B57A5DFCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A311030A-EF4B-48C5-898B-862B57A5DFCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A311030A-EF4B-48C5-898B-862B57A5DFCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C42F7441-DF05-43BA-BCE3-6FA3B32ADF09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C42F7441-DF05-43BA-BCE3-6FA3B32ADF09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C42F7441-DF05-43BA-BCE3-6FA3B32ADF09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C42F7441-DF05-43BA-BCE3-6FA3B32ADF09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

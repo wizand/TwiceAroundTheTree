@@ -1,28 +1,27 @@
 ﻿using GraphComponents;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GraphDataStorage
 {
-    public class GraphStoreModel
+    public class SingleGraphStoreModel : AbstractGraphStoreModel
     {
-        public int i = 1;
-        public Guid Id { get; set; }      
         private Graph Graph { get; set; }
 
-        public GraphStoreModel(Graph graph)
+        public SingleGraphStoreModel(Graph graph)
         {
             Id = Guid.NewGuid();
             Graph = graph;
         }
 
-        public GraphStoreModel(Graph graph, Guid id)
+        public SingleGraphStoreModel(Graph graph, Guid id)
         {
             Id = id;
             Graph = graph;
+            
         }
 
         public Graph GetGraphCopy() {

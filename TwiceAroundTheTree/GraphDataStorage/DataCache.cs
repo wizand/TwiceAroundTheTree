@@ -6,7 +6,7 @@ namespace GraphDataStorage
 {
     public class DataCache : IGraphDataAccess
     {
-        private IDictionary<Guid, GraphStoreModel> _graphStore = null;
+        private IDictionary<Guid, AbstractGraphStoreModel> _graphStore = null;
         private object _graphStoreLock = new object();
 
 
@@ -15,34 +15,51 @@ namespace GraphDataStorage
                 if (_instance == null)
                     _instance = new DataCache();
                 return _instance;
-            } 
+            }
         }
 
-        private IDictionary<Guid, GraphStoreModel> GetGraphStore()
+        private IDictionary<Guid, AbstractGraphStoreModel> GetGraphStore()
         {
 
-            
-                if ( _graphStore == null )
-                {
-                    _graphStore = new Dictionary<Guid, GraphStoreModel>();
-                }
-            
+
+            if (_graphStore == null)
+            {
+                _graphStore = new Dictionary<Guid, AbstractGraphStoreModel>();
+            }
+
             return _graphStore;
+        }
+
+        public Guid StoreMultipleGraphs(List<Graph> graphs)
+        {
+            MultipleGraphsStoreModel storeModel = new MultipleGraphsStoreModel(graphs);
+        
+            lock(_graphStoreLock)
+            {
+                foreach (SingleGraphStoreModel singleStoreModel in storeModel.StoredGraphs) 
+                {
+                    GetGraphStore()[singleStoreModel.Id] = singleStoreModel;
+                }
+                
+                GetGraphStore()[storeModel.Id] = storeModel;
+            }
+
+            return storeModel.Id;
         }
 
         public Guid StoreGraph(Graph graphToStore)
         {
-            GraphStoreModel gtm = new GraphStoreModel(graphToStore);
+            SingleGraphStoreModel storeModel = new SingleGraphStoreModel(graphToStore);
             lock(_graphStoreLock)
             {
-                GetGraphStore()[gtm.Id] = gtm;
+                GetGraphStore()[storeModel.Id] = storeModel;
             }
-            return gtm.Id;
+            return storeModel.Id;
         }
 
         public Graph GetGraphFromStore(Guid id)
         {
-            GraphStoreModel gtm = null;
+            AbstractGraphStoreModel gtm = null;
             bool found = false;
             lock (_graphStoreLock)
             {
@@ -51,7 +68,11 @@ namespace GraphDataStorage
 
             if (found) 
             {
-                return gtm.GetGraphCopy();
+                //TODO: This could probably be done a bit more elegantly via polymorfism
+                if (gtm is SingleGraphStoreModel)
+                {
+                    return ((SingleGraphStoreModel)gtm).GetGraphCopy();
+                }
             }
 
             return null;
@@ -65,6 +86,16 @@ namespace GraphDataStorage
                 found = GetGraphStore().Remove(id);
             }
             return found;
+        }
+
+        public int GetCacheSize()
+        {
+            int count = 0;
+            lock (_graphStoreLock)
+            {
+                count = GetGraphStore().Count;
+            }
+            return count;
         }
     }
 }

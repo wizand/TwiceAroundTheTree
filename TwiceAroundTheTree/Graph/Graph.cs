@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace GraphComponents
@@ -12,7 +13,8 @@ namespace GraphComponents
         public Matrix AdjacencyMatrix { get; set; }
         public bool IsDirectedGraph { get; set; } = false;
 
-
+        public Guid ParentGraph { get; set; }
+        public Guid GraphId { get; set; }
         public List<Graph> MSPGraphs { get; set; } = new List<Graph>();
         public bool IsMSP = false;
         public bool IsHamiltonianCircuit = false;
