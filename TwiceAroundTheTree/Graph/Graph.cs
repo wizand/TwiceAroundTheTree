@@ -30,7 +30,8 @@ namespace GraphComponents
                     {
                         _weight = _weight + e.Weight;
                     }
-                    _weight = _weight / 2;
+                    if ( IsDirectedGraph )
+                        _weight = _weight / 2;
                 }
                 return _weight.Value;
             }
